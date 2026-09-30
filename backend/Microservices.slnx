@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/PaymentService/">
+    <Project Path="PaymentService/PaymentService.Api/PaymentService.Api.csproj" />
+  </Folder>
+</Solution>

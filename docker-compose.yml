@@ -1,0 +1,26 @@
+services:
+  payment-api:
+    build:
+      context: ./backend
+      dockerfile: PaymentService/PaymentService.Api/Dockerfile
+    ports:
+      - "5001:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=payment-db;Database=PaymentDb;Username=postgres;Password=postgres
+    depends_on:
+      - payment-db
+
+  payment-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: PaymentDb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - payment_db_data:/var/lib/postgresql/data
+
+volumes:
+  payment_db_data:
