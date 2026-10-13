@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace Shared.Contracts;
+namespace Shared.Serialization;
 
 public static class JsonDefaults
 {
