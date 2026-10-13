@@ -1,15 +1,13 @@
 services:
-  payment-api:
-    build:
-      context: ./backend
-      dockerfile: PaymentService/PaymentService.Api/Dockerfile
+
+  wiremock:
+    image: wiremock/wiremock:3.9.1
     ports:
-      - "5001:8080"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Host=payment-db;Database=PaymentDb;Username=postgres;Password=postgres
-    depends_on:
-      - payment-db
+      - "8081:8080"
+    volumes:
+      - ./wiremock/mappings:/home/wiremock/mappings:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   payment-db:
     image: postgres:16-alpine
@@ -21,6 +19,18 @@ services:
       - "5432:5432"
     volumes:
       - payment_db_data:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: rabbitmq:4-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 20s
 
 volumes:
   payment_db_data:
